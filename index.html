@@ -38,7 +38,6 @@
                         'scroll-bounce': 'scrollBounce 2s infinite',
                         'text-reveal': 'textReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'spin-slow': 'spin 8s linear infinite',
-                        'spin-once': 'spinOnce 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards',
                     },
                     keyframes: {
                         blob: {
@@ -63,10 +62,6 @@
                         textReveal: {
                             '0%': { opacity: '0', transform: 'translateY(20px)', filter: 'blur(8px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)', filter: 'blur(0)' }
-                        },
-                        spinOnce: {
-                            '0%': { transform: 'rotate(0deg) scale(0.8)', opacity: '0' },
-                            '100%': { transform: 'rotate(360deg) scale(1)', opacity: '1' }
                         }
                     }
                 }
@@ -86,23 +81,6 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
         .dark .bg-noise { opacity: 0.025; }
-
-        /* MICROFEATURE: Subtle Tech Dot Grid (Vercel Style) */
-        .dot-grid {
-            position: fixed;
-            inset: 0;
-            z-index: -3;
-            background-image: radial-gradient(rgba(148, 163, 184, 0.3) 1px, transparent 1px);
-            background-size: 32px 32px;
-            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
-            -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
-            opacity: 0.7;
-            pointer-events: none;
-        }
-        .dark .dot-grid {
-            background-image: radial-gradient(rgba(100, 116, 139, 0.25) 1px, transparent 1px);
-            opacity: 0.5;
-        }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
@@ -170,7 +148,7 @@
         .haptic-interaction:active { transform: translateY(2px) scale(0.98); }
 
         .btn-haptic { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-haptic:active { transform: scale(0.92) !important; }
+        .btn-haptic:active { transform: scale(0.92) !important; } /* Wichtig für Magnetic Hover Override */
 
         /* Details (Aufklapp-Menü) weich machen */
         details > summary { list-style: none; outline: none; }
@@ -244,17 +222,12 @@
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: inline-block;
         }
-        
-        /* Smooth transform für das Hero Element */
-        #hero-content {
-            transition: opacity 0.1s, filter 0.1s, transform 0.1s;
-        }
     </style>
 </head>
+<!-- FIX: Darkmode Hintergrundfarbe ist jetzt direkt im Body eingebunden -->
 <body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-300 antialiased transition-colors duration-700 overflow-x-hidden">
 
     <div class="bg-noise"></div>
-    <div class="dot-grid"></div>
 
     <!-- Animierte Hintergrund-Blobs (mit Parallax Container) -->
     <div id="parallax-bg" class="fixed inset-0 overflow-hidden pointer-events-none z-[-1] transition-transform duration-300 ease-out">
@@ -270,12 +243,13 @@
         </div>
     </div>
 
-    <!-- Floating Navbar (Dynamic Island Morph) -->
+    <!-- Floating Navbar -->
     <nav id="navbar" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-2xl bg-white/95 dark:bg-[#0b1121]/95 backdrop-blur-2xl rounded-full px-2 py-2 flex items-center justify-between transition-all duration-500 shadow-xl shadow-slate-200/50 dark:shadow-black/60 border border-slate-200 dark:border-slate-700/80">
         
         <!-- Logo Bereich -->
         <div class="flex items-center gap-3 pl-2 group cursor-pointer" onclick="window.scrollTo(0,0)">
             <div class="relative w-10 h-10 flex items-center justify-center magnetic">
+                <!-- Circular Progress SVG -->
                 <svg class="absolute inset-0 w-full h-full -rotate-90 transform" viewBox="0 0 36 36">
                     <path class="text-slate-100 dark:text-slate-800 transition-colors" stroke-width="2.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
                     <path id="nav-progress-circle" class="text-brand-500 dark:text-cyan-400 transition-all duration-150 ease-out" stroke-dasharray="0, 100" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
@@ -288,15 +262,20 @@
         <!-- Navigation Links -->
         <div class="flex items-center gap-1 sm:gap-4 pr-1">
             <div class="hidden md:flex items-center gap-1 text-[13px] font-semibold text-slate-600 dark:text-slate-300">
-                <a href="#inhaltsangabe" class="px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic relative group magnetic">Inhalt</a>
-                <a href="#analyse" class="px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic relative group magnetic">Analyse</a>
-                <a href="#stellungnahme" class="px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic relative group magnetic">Stellungnahme</a>
+                <a href="#inhaltsangabe" class="px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic relative group magnetic">
+                    Inhalt
+                </a>
+                <a href="#analyse" class="px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic relative group magnetic">
+                    Analyse
+                </a>
+                <a href="#stellungnahme" class="px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic relative group magnetic">
+                    Stellungnahme
+                </a>
             </div>
             
             <div class="w-px h-6 bg-slate-200 dark:bg-slate-700 hidden md:block mx-1"></div>
 
-            <button id="theme-toggle" class="btn-haptic p-3 rounded-full bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shadow-sm border border-transparent focus:outline-none hover:shadow-md hover:text-brand-600 dark:hover:text-brand-400 magnetic relative overflow-hidden group">
-                <div class="absolute inset-0 bg-brand-400/10 scale-0 group-active:scale-150 transition-transform duration-300 rounded-full"></div>
+            <button id="theme-toggle" class="btn-haptic p-3 rounded-full bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shadow-sm border border-transparent focus:outline-none hover:shadow-md hover:text-brand-600 dark:hover:text-brand-400 magnetic">
                 <svg id="icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <svg id="icon-moon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
             </button>
@@ -307,34 +286,31 @@
     <header class="max-w-5xl mx-auto px-6 pt-48 pb-12 text-center relative flex flex-col items-center min-h-[95vh]">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-96 bg-gradient-to-r from-brand-400/20 via-cyan-400/20 to-indigo-500/20 blur-[100px] rounded-full pointer-events-none z-[-1] animate-pulse-slow"></div>
 
-        <!-- Wrapper für den Fade & Blur Effekt beim Scrollen -->
-        <div id="hero-content" class="w-full flex flex-col items-center">
-            <div class="inline-flex items-center justify-center gap-3 mb-10 px-6 py-2.5 rounded-full glass-panel shadow-md animate-float border-white/80 dark:border-white/10 hover:shadow-lg transition-shadow animate-[textReveal_1s_ease-out_forwards] opacity-0">
-                <span class="flex h-3 w-3 relative">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></span>
-                </span>
-                <span class="font-bold text-[12px] tracking-[0.25em] uppercase text-slate-700 dark:text-slate-300">Textanalyse im Fach Deutsch</span>
-            </div>
-            
-            <h1 class="text-[4rem] sm:text-7xl md:text-[6.5rem] font-black mb-8 tracking-tighter leading-[1.05] drop-shadow-sm text-gradient-premium animate-gradient-x py-2 opacity-0 animate-[textReveal_1s_ease-out_0.2s_forwards]">
-                Zwischen Schmeichelei<br>& Schweigen
-            </h1>
-            
-            <p class="text-xl sm:text-2xl text-slate-600 dark:text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed mt-4 relative z-10 opacity-0 animate-[textReveal_1s_ease-out_0.4s_forwards]">
-                Eine kritische Analyse des Artikels <br class="hidden sm:block">
-                <span class="italic font-bold text-slate-900 dark:text-white relative inline-block group mt-2">
-                    »Auf Trumps heißem Stuhl«
-                    <span class="absolute bottom-1 left-0 w-full h-3 bg-brand-400/20 dark:bg-brand-500/30 -z-10 -rotate-1 group-hover:rotate-0 transition-transform duration-300"></span>
-                </span>
-            </p>
+        <div class="inline-flex items-center justify-center gap-3 mb-10 px-6 py-2.5 rounded-full glass-panel shadow-md animate-float border-white/80 dark:border-white/10 hover:shadow-lg transition-shadow animate-[textReveal_1s_ease-out_forwards] opacity-0">
+            <span class="flex h-3 w-3 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></span>
+            </span>
+            <span class="font-bold text-[12px] tracking-[0.25em] uppercase text-slate-700 dark:text-slate-300">Textanalyse im Fach Deutsch</span>
+        </div>
+        
+        <h1 class="text-[4rem] sm:text-7xl md:text-[6.5rem] font-black mb-8 tracking-tighter leading-[1.05] drop-shadow-sm text-gradient-premium animate-gradient-x py-2 opacity-0 animate-[textReveal_1s_ease-out_0.2s_forwards]">
+            Zwischen Schmeichelei<br>& Schweigen
+        </h1>
+        
+        <p class="text-xl sm:text-2xl text-slate-600 dark:text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed mt-4 relative z-10 opacity-0 animate-[textReveal_1s_ease-out_0.4s_forwards]">
+            Eine kritische Analyse des Artikels <br class="hidden sm:block">
+            <span class="italic font-bold text-slate-900 dark:text-white relative inline-block group mt-2">
+                »Auf Trumps heißem Stuhl«
+                <span class="absolute bottom-1 left-0 w-full h-3 bg-brand-400/20 dark:bg-brand-500/30 -z-10 -rotate-1 group-hover:rotate-0 transition-transform duration-300"></span>
+            </span>
+        </p>
 
-            <!-- Autoren mit Scramble-Effekt -->
-            <div class="mt-16 flex flex-wrap items-center justify-center gap-5 text-sm font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 relative z-10 opacity-0 animate-[textReveal_1s_ease-out_0.6s_forwards]">
-                <div class="glass-panel px-8 py-4 rounded-2xl shadow-sm hover:shadow-brand-500/20 transition-all duration-300 cursor-default border-white/60 dark:border-white/10 magnetic scramble-target" data-text="Jona Noack">Jona Noack</div>
-                <div class="text-brand-500 text-2xl font-black opacity-40">&</div>
-                <div class="glass-panel px-8 py-4 rounded-2xl shadow-sm hover:shadow-cyan-500/20 transition-all duration-300 cursor-default border-white/60 dark:border-white/10 magnetic scramble-target" data-text="Leon Smolcic">Leon Smolcic</div>
-            </div>
+        <!-- Autoren -->
+        <div class="mt-16 flex flex-wrap items-center justify-center gap-5 text-sm font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 relative z-10 opacity-0 animate-[textReveal_1s_ease-out_0.6s_forwards]">
+            <div class="glass-panel px-8 py-4 rounded-2xl shadow-sm hover:shadow-brand-500/20 transition-all duration-300 cursor-default border-white/60 dark:border-white/10 magnetic">Jona Noack</div>
+            <div class="text-brand-500 text-2xl font-black opacity-40">&</div>
+            <div class="glass-panel px-8 py-4 rounded-2xl shadow-sm hover:shadow-cyan-500/20 transition-all duration-300 cursor-default border-white/60 dark:border-white/10 magnetic">Leon Smolcic</div>
         </div>
 
         <div class="flex-grow min-h-[4rem]"></div>
@@ -349,7 +325,7 @@
     </header>
 
     <!-- Hauptinhalt -->
-    <main class="max-w-4xl mx-auto px-6 pb-32 space-y-40 relative z-10">
+    <main class="max-w-4xl mx-auto px-6 pb-32 space-y-40">
 
         <!-- Kachel-Übersicht -->
         <section id="übersicht" class="grid grid-cols-1 sm:grid-cols-2 gap-6 scroll-mt-32">
@@ -410,14 +386,14 @@
                 </div>
                 
                 <details class="group outline-none">
-                    <summary class="cursor-pointer flex items-center justify-between list-none p-6 rounded-2xl bg-white/40 dark:bg-slate-800/30 hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all border border-white/60 dark:border-white/5 btn-haptic shadow-sm hover:shadow-md backdrop-blur-sm magnetic relative overflow-hidden">
-                        <span class="font-bold text-brand-600 dark:text-cyan-400 text-lg sm:text-xl relative z-10">Vollständigen Artikel lesen</span>
-                        <div class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center group-open:rotate-180 transition-transform duration-500 shadow-sm text-brand-500 border border-slate-200/50 dark:border-slate-700/50 relative z-10">
+                    <summary class="cursor-pointer flex items-center justify-between list-none p-6 rounded-2xl bg-white/40 dark:bg-slate-800/30 hover:bg-white/80 dark:hover:bg-slate-800/80 transition-all border border-white/60 dark:border-white/5 btn-haptic shadow-sm hover:shadow-md backdrop-blur-sm magnetic">
+                        <span class="font-bold text-brand-600 dark:text-cyan-400 text-lg sm:text-xl">Vollständigen Artikel lesen</span>
+                        <div class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center group-open:rotate-180 transition-transform duration-500 shadow-sm text-brand-500 border border-slate-200/50 dark:border-slate-700/50">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                     </summary>
                     <div class="mt-10 px-4 sm:px-8 text-slate-700 dark:text-slate-300 leading-[1.8] text-lg space-y-7 font-medium">
-                        <p class="first-letter:text-5xl first-letter:font-black first-letter:text-brand-500 first-letter:mr-2 first-letter:float-left">Immerhin, es geht nicht gegen Deutschland. Der Kanzler sitzt im Oval Office neben Donald Trump, Kameras richten sich auf die beiden, Journalisten rufen Fragen in Raum. Iran ist das Thema. Es ist die erste Gelegenheit für amerikanische Journalisten, ihren Präsidenten ausführlich zu dem Angriff zu befragen. Trump spricht von den üblen Machthabern im Iran, die zuletzt 35.000 Demonstrierende umgebracht hätten, von der Gefahr, die seit Jahrzehnten von den Mullahs ausgehe. „Das sind kranke, verrückte Menschen.“</p>
+                        <p class="first-letter:text-5xl first-letter:font-black first-letter:text-brand-500 first-letter:mr-2 first-letter:float-left">Immerhin, es geht nicht gegen Deutschland. Der Kanzler sitzt im Oval Office neben Donald Trump, Kameras richten sich auf die beiden, Journalisten rufen Fragen in den Raum. Iran ist das Thema. Es ist die erste Gelegenheit für amerikanische Journalisten, ihren Präsidenten ausführlich zu dem Angriff zu befragen. Trump spricht von den üblen Machthabern im Iran, die zuletzt 35.000 Demonstrierende umgebracht hätten, von der Gefahr, die seit Jahrzehnten von den Mullahs ausgehe. „Das sind kranke, verrückte Menschen.“</p>
                         
                         <div class="py-4">
                             <h3 class="font-bold text-slate-900 dark:text-white text-2xl mb-3 flex items-center gap-3">
@@ -530,7 +506,7 @@
             <p class="font-bold text-slate-900 dark:text-white tracking-[0.3em] uppercase text-xs mb-6">Deutschprojekt Textanalyse</p>
             <p class="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                 Gestaltet und verfasst von <br class="sm:hidden">
-                <span class="text-slate-800 dark:text-slate-300 font-bold px-1 scramble-target" data-text="Jona Noack">Jona Noack</span> & <span class="text-slate-800 dark:text-slate-300 font-bold px-1 scramble-target" data-text="Leon Smolcic">Leon Smolcic</span><br>
+                <span class="text-slate-800 dark:text-slate-300 font-bold px-1">Jona Noack & Leon Smolcic</span><br>
                 <span class="text-xs opacity-60 mt-2 block">&copy; 2026</span>
             </p>
         </div>
@@ -540,13 +516,13 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             
-            // --- 1. DARK MODE LOGIC (inkl. Rotation Microfeature) ---
+            // --- 1. DARK MODE LOGIC ---
             const html = document.documentElement;
             const themeBtn = document.getElementById("theme-toggle");
             const iconSun = document.getElementById("icon-sun");
             const iconMoon = document.getElementById("icon-moon");
 
-            function updateTheme(isDark, animate = false) {
+            function updateTheme(isDark) {
                 if (isDark) {
                     html.classList.add('dark');
                     localStorage.theme = 'dark';
@@ -558,15 +534,6 @@
                     iconSun.classList.add('hidden');
                     iconMoon.classList.remove('hidden');
                 }
-                
-                if(animate) {
-                    iconSun.classList.add('animate-spin-once');
-                    iconMoon.classList.add('animate-spin-once');
-                    setTimeout(() => {
-                        iconSun.classList.remove('animate-spin-once');
-                        iconMoon.classList.remove('animate-spin-once');
-                    }, 500);
-                }
             }
 
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -575,7 +542,7 @@
                 updateTheme(false);
             }
 
-            themeBtn.addEventListener("click", () => updateTheme(!html.classList.contains("dark"), true));
+            themeBtn.addEventListener("click", () => updateTheme(!html.classList.contains("dark")));
 
             // --- 2. FORTSCHRITTSBALKEN & NAV-CIRCLE ---
             const navProgressCircle = document.getElementById('nav-progress-circle');
@@ -586,15 +553,12 @@
                     let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
                     let scrolled = (winScroll / height) * 100;
                     
+                    // Top Progress Bar
                     document.getElementById("myBar").style.width = scrolled + "%";
                     
+                    // Circular Progress in Navbar
                     if(navProgressCircle) {
                         navProgressCircle.style.strokeDasharray = `${scrolled}, 100`;
-                        if(scrolled > 99) {
-                            navProgressCircle.classList.add('text-fuchsia-500');
-                        } else {
-                            navProgressCircle.classList.remove('text-fuchsia-500');
-                        }
                     }
                 });
             });
@@ -656,7 +620,7 @@
                 });
             });
 
-            // --- 6. MAGNETIC HOVER ---
+            // --- 6. MAGNETIC HOVER (Neu) ---
             document.querySelectorAll('.magnetic').forEach(el => {
                 el.addEventListener('mousemove', (e) => {
                     const rect = el.getBoundingClientRect();
@@ -669,102 +633,25 @@
                 });
             });
 
-            // --- 7. PARALLAX BACKGROUND & HERO BLUR (Microfeatures) ---
+            // --- 7. PARALLAX BACKGROUND (Neu) ---
             const parallaxBg = document.getElementById('parallax-bg');
-            const heroContent = document.getElementById('hero-content');
-            
             window.addEventListener('scroll', () => {
                 requestAnimationFrame(() => {
                     const scrolled = window.scrollY;
                     parallaxBg.style.transform = `translateY(${scrolled * 0.15}px)`;
-                    
-                    if (scrolled < 800) {
-                        heroContent.style.opacity = 1 - (scrolled / 500);
-                        heroContent.style.filter = `blur(${scrolled / 50}px)`;
-                        heroContent.style.transform = `translateY(${scrolled / 3}px)`;
-                    }
                 });
             });
 
-            // --- 8. DYNAMIC ISLAND NAV MORPH (Microfeature) ---
+            // --- 8. DYNAMIC NAVBAR SHRINK ---
             const navbar = document.getElementById('navbar');
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
-                    navbar.classList.add('py-1', 'shadow-2xl', 'max-w-xl');
-                    navbar.classList.remove('py-2', 'shadow-xl', 'max-w-2xl');
+                    navbar.classList.add('py-1', 'shadow-2xl');
+                    navbar.classList.remove('py-2', 'shadow-xl');
                 } else {
-                    navbar.classList.remove('py-1', 'shadow-2xl', 'max-w-xl');
-                    navbar.classList.add('py-2', 'shadow-xl', 'max-w-2xl');
+                    navbar.classList.remove('py-1', 'shadow-2xl');
+                    navbar.classList.add('py-2', 'shadow-xl');
                 }
-            });
-
-            // --- 9. TEXT SCRAMBLE DECODER EFFECT (Microfeature) ---
-            class TextScramble {
-                constructor(el) {
-                    this.el = el;
-                    this.chars = '!<>-_\\\\/[]{}—=+*^?#________';
-                    this.update = this.update.bind(this);
-                }
-                setText(newText) {
-                    const oldText = this.el.innerText;
-                    const length = Math.max(oldText.length, newText.length);
-                    const promise = new Promise((resolve) => this.resolve = resolve);
-                    this.queue = [];
-                    for (let i = 0; i < length; i++) {
-                        const from = oldText[i] || '';
-                        const to = newText[i] || '';
-                        const start = Math.floor(Math.random() * 40);
-                        const end = start + Math.floor(Math.random() * 40);
-                        this.queue.push({ from, to, start, end });
-                    }
-                    cancelAnimationFrame(this.frameRequest);
-                    this.frame = 0;
-                    this.update();
-                    return promise;
-                }
-                update() {
-                    let output = '';
-                    let complete = 0;
-                    for (let i = 0, n = this.queue.length; i < n; i++) {
-                        let { from, to, start, end, char } = this.queue[i];
-                        if (this.frame >= end) {
-                            complete++;
-                            output += to;
-                        } else if (this.frame >= start) {
-                            if (!char || Math.random() < 0.28) {
-                                char = this.randomChar();
-                                this.queue[i].char = char;
-                            }
-                            output += `<span class="opacity-40">${char}</span>`;
-                        } else {
-                            output += from;
-                        }
-                    }
-                    this.el.innerHTML = output;
-                    if (complete === this.queue.length) {
-                        this.resolve();
-                    } else {
-                        this.frameRequest = requestAnimationFrame(this.update);
-                        this.frame++;
-                    }
-                }
-                randomChar() {
-                    return this.chars[Math.floor(Math.random() * this.chars.length)];
-                }
-            }
-
-            const scrambleElements = document.querySelectorAll('.scramble-target');
-            scrambleElements.forEach(el => {
-                const fx = new TextScramble(el);
-                const text = el.getAttribute('data-text');
-                
-                // Einmal beim Laden abspielen
-                setTimeout(() => fx.setText(text), 800);
-                
-                // Bei Hover erneut abspielen
-                el.addEventListener('mouseenter', () => {
-                    fx.setText(text);
-                });
             });
         });
     </script>
