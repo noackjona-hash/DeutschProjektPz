@@ -16,10 +16,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Default gnrcounter.com code -->
-    <script language="JavaScript" type="text/javascript" src="https://gnrcounter.com/counter.php?accId=2d95a1f1afa00a1beb481aeb9c8aabbf"></script>
-    <noscript><a href="https://gnrcounter.com" title="Web Analytics">Web Analytics</a></noscript>
-    
     <!-- Tailwind Config für Tech-Farben und flüssige Animationen -->
     <script>
         tailwind.config = {
@@ -32,14 +28,16 @@
                     colors: {
                         brand: { 50: '#eff6ff', 100: '#dbeafe', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a' },
                         background: { light: '#f8fafc', dark: '#030712' },
-                        surface: { light: 'rgba(255, 255, 255, 0.7)', dark: 'rgba(15, 23, 42, 0.4)' }
+                        surface: { light: 'rgba(255, 255, 255, 0.85)', dark: 'rgba(15, 23, 42, 0.7)' }
                     },
                     animation: {
                         'blob': 'blob 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1)',
                         'gradient-x': 'gradient-x 8s ease-in-out infinite',
                         'float': 'float 6s ease-in-out infinite',
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'scroll-bounce': 'scrollBounce 2s infinite'
+                        'scroll-bounce': 'scrollBounce 2s infinite',
+                        'text-reveal': 'textReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'spin-slow': 'spin 8s linear infinite',
                     },
                     keyframes: {
                         blob: {
@@ -60,6 +58,10 @@
                             '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
                             '40%': { transform: 'translateY(-10px)' },
                             '60%': { transform: 'translateY(-5px)' }
+                        },
+                        textReveal: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)', filter: 'blur(8px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)', filter: 'blur(0)' }
                         }
                     }
                 }
@@ -67,7 +69,7 @@
         }
     </script>
 
-    <!-- Custom CSS für absolute Perfektion (Haptik & Smoothness) -->
+    <!-- Custom CSS für absolute Perfektion -->
     <style>
         /* Base & Noise Texture */
         body {
@@ -78,25 +80,24 @@
             background-color: theme('colors.background.dark');
         }
         
-        /* Premium Subtles Rauschen für den Apple/Tech Look */
         .bg-noise {
             position: fixed;
             inset: 0;
-            z-index: 50;
+            z-index: -2;
             opacity: 0.035;
             pointer-events: none;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
         .dark .bg-noise { opacity: 0.025; }
 
-        /* Versteckte/Minimale Scrollbar für cleanen Look */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background: #334155; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Butterweiche Fade-Up & Blur Animation (Macrofeature) */
+        /* Butterweiche Fade-Up & Blur Animation */
         .reveal {
             opacity: 0;
             transform: translateY(40px) scale(0.96);
@@ -109,13 +110,12 @@
             filter: blur(0);
         }
 
-        /* Staggering für nacheinander fliegende Elemente */
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
         .delay-300 { transition-delay: 300ms; }
         .delay-400 { transition-delay: 400ms; }
 
-        /* Erweitertes Glassmorphism mit Spotlight-Glow (Macrofeature) */
+        /* Glas-Karten für den Body (nicht mehr für die Navbar) */
         .glass-panel {
             background: theme('colors.surface.light');
             backdrop-filter: blur(24px);
@@ -124,7 +124,9 @@
             box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255,255,255,0.8);
             position: relative;
             overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+            transition: box-shadow 0.4s ease, border-color 0.4s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
         .dark .glass-panel {
             background: theme('colors.surface.dark');
@@ -132,7 +134,6 @@
             box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
-        /* Mouse Spotlight Effect auf Karten */
         .glass-panel::before {
             content: "";
             position: absolute;
@@ -147,43 +148,26 @@
             background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
         }
         .glass-panel:hover::before { opacity: 1; }
-        
-        /* Content z-index fix for spotlight */
-        .glass-panel > * { position: relative; z-index: 1; }
+        .glass-panel > * { position: relative; z-index: 1; transform: translateZ(20px); }
 
-        /* Haptisches Feedback (Spring-Effekt) */
-        .haptic-interaction:hover {
-            transform: translateY(-4px) scale(1.01);
-            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.15);
-            border-color: rgba(59, 130, 246, 0.3);
-        }
-        .dark .haptic-interaction:hover {
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            border-color: rgba(96, 165, 250, 0.2);
-        }
+        .haptic-interaction { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .haptic-interaction:active { transform: translateY(2px) scale(0.98); }
 
-        /* Button Haptics */
         .btn-haptic { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .btn-haptic:active { transform: scale(0.92); }
 
-        /* Details (Aufklapp-Menü) extrem weich machen */
+        /* Details (Aufklapp-Menü) weich machen */
         details > summary { list-style: none; outline: none; }
         details > summary::-webkit-details-marker { display: none; }
-        
-        details[open] summary ~ * {
-            animation: sweep 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        details[open] summary ~ * { animation: sweep 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes sweep {
             0%    { opacity: 0; transform: translateY(-15px) scale(0.98); filter: blur(4px); }
             100%  { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
         }
         
-        /* Custom Selection Highlight */
         ::selection { background: rgba(59, 130, 246, 0.25); color: inherit; }
         .dark ::selection { background: rgba(96, 165, 250, 0.35); color: #fff; }
 
-        /* Typography Enhancements */
         .text-gradient-premium {
             background: linear-gradient(135deg, #2563eb 0%, #06b6d4 50%, #4f46e5 100%);
             -webkit-background-clip: text;
@@ -196,14 +180,55 @@
             -webkit-text-fill-color: transparent;
             background-size: 200% 200%;
         }
+
+        /* --- MICROFEATURE: Text Marker Highlights --- */
+        .marker-highlight {
+            background: linear-gradient(120deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.25) 100%);
+            background-repeat: no-repeat;
+            background-size: 0% 100%;
+            transition: background-size 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+        .dark .marker-highlight {
+            background: linear-gradient(120deg, rgba(34, 211, 238, 0.25) 0%, rgba(34, 211, 238, 0.25) 100%);
+            background-repeat: no-repeat;
+            background-size: 0% 100%;
+        }
+        .marker-highlight.active { background-size: 100% 100%; }
+
+        /* --- MICROFEATURE: Animated Quote Border --- */
+        .animated-border-box {
+            position: relative;
+            background: theme('colors.white');
+            z-index: 1;
+        }
+        .dark .animated-border-box {
+            background: theme('colors.slate.900');
+        }
+        .animated-border-box::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: conic-gradient(from 0deg, #3b82f6, #06b6d4, #8b5cf6, #3b82f6);
+            z-index: -1;
+            animation: spin-slow 4s linear infinite;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        .dark .animated-border-box::before {
+            background: conic-gradient(from 0deg, #60a5fa, #22d3ee, #818cf8, #60a5fa);
+            opacity: 0.3;
+        }
+        .animated-border-box:hover::before { opacity: 1; }
     </style>
 </head>
 <body class="text-slate-800 dark:text-slate-300 antialiased transition-colors duration-700 overflow-x-hidden">
 
-    <!-- Subtiles Rauschen über der gesamten Seite -->
     <div class="bg-noise"></div>
 
-    <!-- Animierte Hintergrund-Blobs (Der weiche Tech-Vibe) -->
+    <!-- Animierte Hintergrund-Blobs -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
         <div class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob bg-blue-300 dark:bg-blue-900/30 dark:mix-blend-screen transition-all duration-1000"></div>
         <div class="absolute top-[20%] right-[-10%] w-[50vw] h-[50vw] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob animation-delay-2000 bg-cyan-300 dark:bg-cyan-900/20 dark:mix-blend-screen transition-all duration-1000"></div>
@@ -217,47 +242,50 @@
         </div>
     </div>
 
-    <!-- Floating Navbar (Dynamic Island Style) -->
-    <nav id="navbar" class="fixed top-6 left-1/2 -translate-x-1/2 z-60 w-[95%] max-w-2xl glass-panel rounded-full px-2 py-2 flex items-center justify-between transition-all duration-500 hover:shadow-2xl hover:border-white/80 dark:hover:border-white/10">
-        <!-- Logo Bereich -->
-        <div class="flex items-center gap-3 pl-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-brand-600 flex items-center justify-center text-white text-sm font-black tracking-tighter shadow-lg shadow-brand-500/30 group-hover:scale-105 transition-transform duration-300">DP</div>
+    <!-- Floating Navbar (GEFIXT: Kein Überlappen mehr, hoch deckend!) -->
+    <nav id="navbar" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-2xl bg-white/95 dark:bg-[#0b1121]/95 backdrop-blur-2xl rounded-full px-2 py-2 flex items-center justify-between transition-all duration-500 shadow-xl shadow-slate-200/50 dark:shadow-black/60 border border-slate-200 dark:border-slate-700/80">
+        
+        <!-- Logo Bereich mit Microfeature: Scroll Circular Progress -->
+        <div class="flex items-center gap-3 pl-2 group cursor-pointer" onclick="window.scrollTo(0,0)">
+            <div class="relative w-10 h-10 flex items-center justify-center">
+                <!-- Circular Progress SVG -->
+                <svg class="absolute inset-0 w-full h-full -rotate-90 transform" viewBox="0 0 36 36">
+                    <path class="text-slate-100 dark:text-slate-800 transition-colors" stroke-width="2.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <path id="nav-progress-circle" class="text-brand-500 dark:text-cyan-400 transition-all duration-150 ease-out" stroke-dasharray="0, 100" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-brand-600 flex items-center justify-center text-white text-xs font-black tracking-tighter shadow-sm group-hover:scale-105 transition-transform duration-300">DP</div>
+            </div>
             <span class="font-bold tracking-tight text-slate-900 dark:text-white hidden sm:block text-[15px] group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Deutschprojekt</span>
         </div>
         
         <!-- Navigation Links -->
         <div class="flex items-center gap-1 sm:gap-4 pr-1">
             <div class="hidden md:flex items-center gap-1 text-[13px] font-semibold text-slate-600 dark:text-slate-300">
-                <a href="#inhaltsangabe" class="px-4 py-2 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-800/80 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic relative group">
+                <a href="#inhaltsangabe" class="px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic hover:scale-105 relative group">
                     Inhalt
-                    <span class="absolute inset-x-4 -bottom-1 h-0.5 bg-brand-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"></span>
                 </a>
-                <a href="#analyse" class="px-4 py-2 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-800/80 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic relative group">
+                <a href="#analyse" class="px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic hover:scale-105 relative group">
                     Analyse
-                    <span class="absolute inset-x-4 -bottom-1 h-0.5 bg-brand-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"></span>
                 </a>
-                <a href="#stellungnahme" class="px-4 py-2 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-800/80 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic relative group">
+                <a href="#stellungnahme" class="px-4 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-white transition-all btn-haptic hover:scale-105 relative group">
                     Stellungnahme
-                    <span class="absolute inset-x-4 -bottom-1 h-0.5 bg-brand-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full"></span>
                 </a>
             </div>
             
-            <div class="w-px h-6 bg-slate-300 dark:bg-slate-700 hidden md:block mx-1"></div>
+            <div class="w-px h-6 bg-slate-200 dark:bg-slate-700 hidden md:block mx-1"></div>
 
-            <!-- Dark Mode Toggle Button -->
-            <button id="theme-toggle" class="btn-haptic p-3 rounded-full bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition-all shadow-sm border border-slate-200/80 dark:border-slate-600/50 focus:outline-none hover:shadow-md hover:text-brand-600 dark:hover:text-brand-400">
+            <button id="theme-toggle" class="btn-haptic p-3 rounded-full bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shadow-sm border border-transparent focus:outline-none hover:shadow-md hover:text-brand-600 dark:hover:text-brand-400 hover:scale-110">
                 <svg id="icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <svg id="icon-moon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
             </button>
         </div>
     </nav>
 
-    <!-- Hero Header -->
-    <header class="max-w-5xl mx-auto px-6 pt-48 pb-20 text-center reveal relative flex flex-col items-center justify-center min-h-[95vh]">
-        <!-- Leuchtender Hintergrund hinter dem Titel -->
+    <!-- Hero Layout -->
+    <header class="max-w-5xl mx-auto px-6 pt-48 pb-12 text-center relative flex flex-col items-center min-h-[95vh]">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-96 bg-gradient-to-r from-brand-400/20 via-cyan-400/20 to-indigo-500/20 blur-[100px] rounded-full pointer-events-none z-[-1] animate-pulse-slow"></div>
 
-        <div class="inline-flex items-center justify-center gap-3 mb-10 px-6 py-2.5 rounded-full glass-panel shadow-md animate-float border-white/80 dark:border-white/10 hover:shadow-lg transition-shadow">
+        <div class="inline-flex items-center justify-center gap-3 mb-10 px-6 py-2.5 rounded-full glass-panel shadow-md animate-float border-white/80 dark:border-white/10 hover:shadow-lg transition-shadow animate-[textReveal_1s_ease-out_forwards] opacity-0">
             <span class="flex h-3 w-3 relative">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></span>
@@ -265,11 +293,11 @@
             <span class="font-bold text-[12px] tracking-[0.25em] uppercase text-slate-700 dark:text-slate-300">Textanalyse im Fach Deutsch</span>
         </div>
         
-        <h1 class="text-[4rem] sm:text-7xl md:text-[6.5rem] font-black mb-8 tracking-tighter leading-[1.05] drop-shadow-sm text-gradient-premium animate-gradient-x py-2">
+        <h1 class="text-[4rem] sm:text-7xl md:text-[6.5rem] font-black mb-8 tracking-tighter leading-[1.05] drop-shadow-sm text-gradient-premium animate-gradient-x py-2 opacity-0 animate-[textReveal_1s_ease-out_0.2s_forwards]">
             Zwischen Schmeichelei<br>& Schweigen
         </h1>
         
-        <p class="text-xl sm:text-2xl text-slate-600 dark:text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed mt-4 relative z-10">
+        <p class="text-xl sm:text-2xl text-slate-600 dark:text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed mt-4 relative z-10 opacity-0 animate-[textReveal_1s_ease-out_0.4s_forwards]">
             Eine kritische Analyse des Artikels <br class="hidden sm:block">
             <span class="italic font-bold text-slate-900 dark:text-white relative inline-block group mt-2">
                 »Auf Trumps heißem Stuhl«
@@ -278,20 +306,21 @@
         </p>
 
         <!-- Autoren -->
-        <div class="mt-16 flex flex-wrap items-center justify-center gap-5 text-sm font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 relative z-10">
-            <div class="glass-panel px-8 py-4 rounded-2xl shadow-sm hover:-translate-y-1 transition-transform duration-300 cursor-default border-white/60 dark:border-white/10">Jona Noack</div>
+        <div class="mt-16 flex flex-wrap items-center justify-center gap-5 text-sm font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 relative z-10 opacity-0 animate-[textReveal_1s_ease-out_0.6s_forwards]">
+            <div class="glass-panel px-8 py-4 rounded-2xl shadow-sm hover:scale-105 hover:-translate-y-1 hover:shadow-brand-500/20 transition-all duration-300 cursor-default border-white/60 dark:border-white/10">Jona Noack</div>
             <div class="text-brand-500 text-2xl font-black opacity-40">&</div>
-            <div class="glass-panel px-8 py-4 rounded-2xl shadow-sm hover:-translate-y-1 transition-transform duration-300 cursor-default border-white/60 dark:border-white/10">Leon Smolcic</div>
+            <div class="glass-panel px-8 py-4 rounded-2xl shadow-sm hover:scale-105 hover:-translate-y-1 hover:shadow-cyan-500/20 transition-all duration-300 cursor-default border-white/60 dark:border-white/10">Leon Smolcic</div>
         </div>
 
+        <div class="flex-grow min-h-[4rem]"></div>
+
         <!-- Scroll Indicator -->
-        <a href="#übersicht" class="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-60 hover:opacity-100 transition-opacity text-slate-500 dark:text-slate-400 flex flex-col items-center gap-2">
+        <a href="#übersicht" class="opacity-60 hover:opacity-100 transition-opacity text-slate-500 dark:text-slate-400 flex flex-col items-center gap-2 mt-auto">
             <span class="text-[10px] font-bold tracking-[0.2em] uppercase">Scroll</span>
             <div class="w-6 h-10 border-2 border-current rounded-full flex justify-center pt-2">
                 <div class="w-1.5 h-1.5 bg-current rounded-full animate-scroll-bounce"></div>
             </div>
         </a>
-
     </header>
 
     <!-- Hauptinhalt -->
@@ -299,7 +328,7 @@
 
         <!-- Kachel-Übersicht -->
         <section id="übersicht" class="grid grid-cols-1 sm:grid-cols-2 gap-6 scroll-mt-32">
-            <a href="#text" class="reveal delay-100 haptic-interaction glass-panel flex items-center p-6 rounded-[2rem] group relative">
+            <a href="#text" class="reveal delay-100 tilt-card haptic-interaction glass-panel flex items-center p-6 rounded-[2rem] group relative">
                 <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-transparent rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="w-16 h-16 rounded-2xl bg-white/60 dark:bg-slate-800/60 text-slate-400 flex items-center justify-center mr-6 font-black text-2xl group-hover:bg-brand-500 group-hover:text-white transition-all shadow-inner border border-white/50 dark:border-white/5">1</div>
                 <div>
@@ -307,7 +336,7 @@
                     <span class="text-sm text-slate-500 dark:text-slate-400 font-medium tracking-wide">Der Artikel der PZ</span>
                 </div>
             </a>
-            <a href="#inhaltsangabe" class="reveal delay-200 haptic-interaction glass-panel flex items-center p-6 rounded-[2rem] group relative">
+            <a href="#inhaltsangabe" class="reveal delay-200 tilt-card haptic-interaction glass-panel flex items-center p-6 rounded-[2rem] group relative">
                 <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="w-16 h-16 rounded-2xl bg-white/60 dark:bg-slate-800/60 text-slate-400 flex items-center justify-center mr-6 font-black text-2xl group-hover:bg-cyan-500 group-hover:text-white transition-all shadow-inner border border-white/50 dark:border-white/5">2</div>
                 <div>
@@ -315,7 +344,7 @@
                     <span class="text-sm text-slate-500 dark:text-slate-400 font-medium tracking-wide">Zusammenfassung</span>
                 </div>
             </a>
-            <a href="#analyse" class="reveal delay-300 haptic-interaction glass-panel flex items-center p-6 rounded-[2rem] group relative">
+            <a href="#analyse" class="reveal delay-300 tilt-card haptic-interaction glass-panel flex items-center p-6 rounded-[2rem] group relative">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="w-16 h-16 rounded-2xl bg-white/60 dark:bg-slate-800/60 text-slate-400 flex items-center justify-center mr-6 font-black text-2xl group-hover:bg-indigo-500 group-hover:text-white transition-all shadow-inner border border-white/50 dark:border-white/5">3</div>
                 <div>
@@ -323,7 +352,7 @@
                     <span class="text-sm text-slate-500 dark:text-slate-400 font-medium tracking-wide">Sprache & Intention</span>
                 </div>
             </a>
-            <a href="#stellungnahme" class="reveal delay-400 haptic-interaction glass-panel flex items-center p-6 rounded-[2rem] group relative">
+            <a href="#stellungnahme" class="reveal delay-400 tilt-card haptic-interaction glass-panel flex items-center p-6 rounded-[2rem] group relative">
                 <div class="absolute inset-0 bg-gradient-to-br from-fuchsia-500/5 to-transparent rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <div class="w-16 h-16 rounded-2xl bg-white/60 dark:bg-slate-800/60 text-slate-400 flex items-center justify-center mr-6 font-black text-2xl group-hover:bg-fuchsia-500 group-hover:text-white transition-all shadow-inner border border-white/50 dark:border-white/5">4</div>
                 <div>
@@ -397,14 +426,13 @@
             </div>
             
             <div class="glass-panel rounded-[2.5rem] p-8 sm:p-14 text-[1.1rem] leading-[1.8] text-slate-700 dark:text-slate-300 font-medium space-y-8 relative">
-                <!-- Deko-Element -->
                 <div class="absolute top-10 right-10 w-24 h-24 bg-cyan-400/10 rounded-full blur-2xl pointer-events-none"></div>
 
                 <p>Der von Peter Müller verfasste Zeitungsartikel befasst sich mit dem ersten Aufeinandertreffen von Bundeskanzler Friedrich Merz und US-Präsident Donald Trump in Washington. Der Autor schildert die Dynamik der gemeinsamen Pressekonferenz im Oval Office, bei der außenpolitische Krisen wie der Konflikt im Iran und der Krieg in der Ukraine im Zentrum stehen.</p>
                 
-                <p>Zu Beginn des Gesprächs herrscht eine auffällige Harmonie zwischen den beiden Politikern. Beide vertreten eine harte Linie gegenüber dem Iran. Trump bedient sich starker Worte und lobt Merz im gleichen Atemzug als herausragende Führungskraft, wobei er ihn bewusst von Angela Merkel abgrenzt. Auch bezüglich der Unterstützung für die Ukraine zeigen sich laut Artikel Gemeinsamkeiten.</p>
+                <p>Zu Beginn des Gesprächs herrscht eine auffällige Harmonie zwischen den beiden Politikern. Beide vertreten eine <span class="marker-highlight font-bold">harte Linie gegenüber dem Iran</span>. Trump bedient sich starker Worte und lobt Merz im gleichen Atemzug als herausragende Führungskraft, wobei er ihn bewusst von Angela Merkel abgrenzt. Auch bezüglich der Unterstützung für die Ukraine zeigen sich laut Artikel Gemeinsamkeiten.</p>
 
-                <p>Einen Wendepunkt erfährt die Berichterstattung, als Trump unerwartet scharfe verbale Angriffe gegen europäische Verbündete richtet. Besonders Spanien wird von ihm massiv kritisiert, da die USA spanische Militärbasen nicht nutzen durften. Der Fokus des Textes verlagert sich hierbei auf die Reaktion von Friedrich Merz: <strong class="text-slate-900 dark:text-white font-bold bg-cyan-50 dark:bg-cyan-900/30 px-2 py-0.5 rounded-md">Anstatt sich schützend vor den europäischen Bündnispartner zu stellen, verweigert der Kanzler eine Verteidigung Spaniens</strong> – selbst nach expliziter Nachfrage eines Journalisten. Vielmehr pflichtet er Trump indirekt bei, indem er höhere Militärausgaben von Spanien fordert.</p>
+                <p>Einen Wendepunkt erfährt die Berichterstattung, als Trump unerwartet scharfe verbale Angriffe gegen europäische Verbündete richtet. Besonders Spanien wird von ihm massiv kritisiert, da die USA spanische Militärbasen nicht nutzen durften. Der Fokus des Textes verlagert sich hierbei auf die Reaktion von Friedrich Merz: <span class="marker-highlight font-bold">Anstatt sich schützend vor den europäischen Bündnispartner zu stellen</span>, verweigert der Kanzler eine Verteidigung Spaniens – selbst nach expliziter Nachfrage eines Journalisten. Vielmehr pflichtet er Trump indirekt bei, indem er höhere Militärausgaben von Spanien fordert.</p>
             </div>
         </section>
 
@@ -420,27 +448,27 @@
             <div class="glass-panel rounded-[2.5rem] p-8 sm:p-14 text-[1.1rem] leading-[1.8] text-slate-700 dark:text-slate-300 font-medium space-y-8">
                 <p>Peter Müller nutzt den Bericht nicht nur zur reinen Informationsweitergabe, sondern zeichnet sprachlich ein klares Bild der Machtverhältnisse. Der Titel des Originalartikels, „Auf Trumps heißem Stuhl“, ist eine <strong class="text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-lg border border-indigo-100 dark:border-indigo-800/50">Metapher</strong>, die Merz in die Rolle eines Prüflings oder Bittstellers drängt. Die USA und ihr Präsident werden als dominanter Part der Unterhaltung inszeniert.</p>
                 
-                <!-- Premium Zitat Block -->
-                <div class="my-14 p-8 sm:p-12 rounded-[2.5rem] bg-white/50 dark:bg-slate-900/50 border border-white/60 dark:border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] relative overflow-hidden group hover:shadow-lg transition-all duration-500">
-                    <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-indigo-400 to-brand-600"></div>
-                    
-                    <!-- Dekoratives SVG Quote Icon -->
-                    <div class="absolute -top-4 -right-4 text-indigo-100 dark:text-slate-800/50 transform rotate-12 transition-transform group-hover:rotate-6 duration-700 pointer-events-none">
-                        <svg class="w-40 h-40" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                <!-- Premium Zitat Block mit animiertem Rand -->
+                <div class="my-14 p-1 rounded-[2.5rem] animated-border-box shadow-xl tilt-card">
+                    <div class="p-8 sm:p-12 rounded-[2.4rem] bg-white/95 dark:bg-slate-900/95 relative overflow-hidden group">
+                        
+                        <div class="absolute -top-4 -right-4 text-indigo-100 dark:text-slate-800/50 transform rotate-12 transition-transform group-hover:rotate-6 duration-700 pointer-events-none">
+                            <svg class="w-40 h-40" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                        </div>
+                        
+                        <p class="text-slate-800 dark:text-slate-200 text-2xl sm:text-3xl font-bold italic relative z-10 leading-[1.4] tracking-tight transform transition-transform group-hover:translate-x-2 duration-500">
+                            „Irgendwann beginnt man, sich zu wünschen, dass Merz ein gutes Wort für die europäischen Freunde einlegen würde, doch der Kanzler schweigt.“
+                        </p>
                     </div>
-                    
-                    <p class="text-slate-800 dark:text-slate-200 text-2xl sm:text-3xl font-bold italic relative z-10 leading-[1.4] tracking-tight">
-                        „Irgendwann beginnt man, sich zu wünschen, dass Merz ein gutes Wort für die europäischen Freunde einlegen würde, doch der Kanzler schweigt.“
-                    </p>
                 </div>
                 
-                <p>Der Autor arbeitet mit starken <strong class="text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-lg border border-indigo-100 dark:border-indigo-800/50">Kontrasten</strong>: Einerseits zitiert er Trumps Schmeicheleien („exzellente Führungspersönlichkeit“), andererseits beschreibt er dessen erratische Ausbrüche („Spain is terrible!“). Durch diese Gegenüberstellung verdeutlicht Müller das außenpolitische Dilemma der deutschen Delegation. Merz muss den Spagat schaffen zwischen der Sicherung amerikanischer Gunst – wichtig für Wirtschaft und Ukraine-Politik – und der Loyalität zur Europäischen Union.</p>
+                <p>Der Autor arbeitet mit starken <span class="marker-highlight font-bold">Kontrasten</span>: Einerseits zitiert er Trumps Schmeicheleien („exzellente Führungspersönlichkeit“), andererseits beschreibt er dessen erratische Ausbrüche („Spain is terrible!“). Durch diese Gegenüberstellung verdeutlicht Müller das außenpolitische Dilemma der deutschen Delegation. Merz muss den Spagat schaffen zwischen der Sicherung amerikanischer Gunst – wichtig für Wirtschaft und Ukraine-Politik – und der Loyalität zur Europäischen Union.</p>
 
-                <p>Die <strong class="text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-lg border border-indigo-100 dark:border-indigo-800/50">Wirkungsabsicht</strong> des Autors wird besonders am Ende des Textes deutlich. Müller bewertet Merz' Verhalten kritisch. Das erwähnte „Schweigen“ des Kanzlers wird dem Leser als Schwäche und als Verrat an den europäischen Idealen präsentiert. Der Text ist somit keine neutrale Reportage, sondern ein kritischer politischer Kommentar zur deutschen Diplomatie.</p>
+                <p>Die <span class="marker-highlight font-bold">Wirkungsabsicht</span> des Autors wird besonders am Ende des Textes deutlich. Müller bewertet Merz' Verhalten kritisch. Das erwähnte „Schweigen“ des Kanzlers wird dem Leser als Schwäche und als Verrat an den europäischen Idealen präsentiert. Der Text ist somit keine neutrale Reportage, sondern ein kritischer politischer Kommentar zur deutschen Diplomatie.</p>
             </div>
         </section>
 
-        <!-- Abschnitt 4: Fazit / Stellungnahme (Highlight - Deep Dark Card) -->
+        <!-- Abschnitt 4: Fazit / Stellungnahme -->
         <section id="stellungnahme" class="reveal scroll-mt-32">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 pl-2 border-b border-slate-200/50 dark:border-slate-800/50 pb-6">
                 <div class="flex items-center gap-6">
@@ -449,21 +477,18 @@
                 </div>
             </div>
             
-            <div class="bg-slate-950 rounded-[3rem] p-8 sm:p-16 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] border border-slate-800 text-slate-300 text-[1.1rem] leading-[1.8] font-medium space-y-10 relative overflow-hidden transform transition-all hover:scale-[1.01] duration-500 haptic-interaction group">
+            <div class="bg-slate-950 rounded-[3rem] p-8 sm:p-16 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] border border-slate-800 text-slate-300 text-[1.1rem] leading-[1.8] font-medium space-y-10 relative overflow-hidden transform transition-all hover:scale-[1.01] duration-500 haptic-interaction group tilt-card">
                 
-                <!-- Glühende Akzente tief im dunklen Kasten (Macrofeature) -->
                 <div class="absolute -top-40 -right-40 w-96 h-96 bg-fuchsia-600 rounded-full blur-[140px] opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity duration-700"></div>
                 <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-500 rounded-full blur-[140px] opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity duration-700"></div>
                 
-                <!-- Innerer Glanz-Rand -->
                 <div class="absolute inset-0 rounded-[3rem] border border-white/5 pointer-events-none"></div>
 
                 <p class="relative z-10 text-slate-300">Betrachtet man das im Text geschilderte Verhalten von Friedrich Merz, so zeigt sich das harte Gesicht der Realpolitik. Aus einer rein pragmatischen Sichtweise heraus ist sein Handeln erklärbar: Den unberechenbaren US-Präsidenten bei einem Antrittsbesuch vor laufenden Kameras zu belehren, hätte deutsche Wirtschaftsinteressen und die Unterstützung für die Ukraine akut gefährdet.</p>
                 
                 <p class="relative z-10 text-slate-300">Jedoch schließen wir uns der im Text mitschwingenden Kritik des Autors an. Merz' Verhalten offenbart einen gravierenden Mangel an europäischer Solidarität. Ein deutscher Bundeskanzler, der als Repräsentant der stärksten Wirtschaftskraft Europas auftritt, muss fähig sein, diplomatischen Respekt für die EU einzufordern. Dass er Spanien nicht nur nicht verteidigt, sondern durch die Forderung nach höheren Militärausgaben sogar Trumps Narrativ bedient, ist ein Zeichen der Unterwerfung.</p>
                 
-                <!-- Fazit Highlight Box -->
-                <div class="relative z-10 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 p-8 sm:p-12 rounded-[2.5rem] mt-14 shadow-2xl group-hover:border-white/20 transition-colors duration-500">
+                <div class="relative z-10 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 p-8 sm:p-12 rounded-[2.5rem] mt-14 shadow-2xl group-hover:border-white/20 transition-colors duration-500 transform group-hover:translate-z-10">
                     <p class="text-white font-bold text-2xl sm:text-3xl leading-[1.4] tracking-tight">
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-indigo-400 mr-2 uppercase tracking-[0.2em] text-xs block mb-4 font-black">Unser Fazit</span> 
                         Ein kurzfristiges Lob aus dem Oval Office darf niemals den Preis kosten, die europäische Einigkeit auf der Weltbühne preiszugeben.
@@ -474,7 +499,7 @@
     </main>
 
     <!-- Cleaner Premium Footer -->
-    <footer class="border-t border-slate-200/50 dark:border-slate-800/50 py-20 mt-24 relative z-10 bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl">
+    <footer class="border-t border-slate-200/50 dark:border-slate-800/50 py-20 mt-24 relative z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
         <div class="max-w-3xl mx-auto px-6 text-center">
             <div class="w-16 h-1 bg-gradient-to-r from-brand-400 to-indigo-500 rounded-full mx-auto mb-10 opacity-80"></div>
             <p class="font-bold text-slate-900 dark:text-white tracking-[0.3em] uppercase text-xs mb-6">Deutschprojekt Textanalyse</p>
@@ -486,11 +511,11 @@
         </div>
     </footer>
 
-    <!-- JavaScript für weiche UX-Logik & Macrofeatures -->
+    <!-- JavaScript für UX-Logik & Macrofeatures -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             
-            // --- 1. DARK MODE LOGIC (Smooth Transition) ---
+            // --- 1. DARK MODE LOGIC ---
             const html = document.documentElement;
             const themeBtn = document.getElementById("theme-toggle");
             const iconSun = document.getElementById("icon-sun");
@@ -516,67 +541,94 @@
                 updateTheme(false);
             }
 
-            themeBtn.addEventListener("click", () => {
-                const isDarkNow = html.classList.contains("dark");
-                updateTheme(!isDarkNow);
-            });
+            themeBtn.addEventListener("click", () => updateTheme(!html.classList.contains("dark")));
 
-            // --- 2. FORTSCHRITTSBALKEN (Weich & Genau) ---
+            // --- 2. FORTSCHRITTSBALKEN & NAV-CIRCLE ---
+            const navProgressCircle = document.getElementById('nav-progress-circle');
+            
             window.addEventListener('scroll', () => {
                 requestAnimationFrame(() => {
                     let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
                     let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
                     let scrolled = (winScroll / height) * 100;
+                    
+                    // Top Progress Bar
                     document.getElementById("myBar").style.width = scrolled + "%";
+                    
+                    // Circular Progress in Navbar
+                    if(navProgressCircle) {
+                        navProgressCircle.style.strokeDasharray = `${scrolled}, 100`;
+                    }
                 });
             });
 
-            // --- 3. SCROLL-ANIMATIONEN (Apple-Style Reveal) ---
+            // --- 3. SCROLL-ANIMATIONEN & TEXT MARKER ---
             const reveals = document.querySelectorAll('.reveal');
+            const markers = document.querySelectorAll('.marker-highlight');
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        // Optional: Unobserve nach dem Einblenden, damit es bleibt
-                        observer.unobserve(entry.target);
                     }
                 });
-            }, {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+            const markerObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Verzögertes "Anmalen" für besseren Effekt
+                        setTimeout(() => entry.target.classList.add('active'), 200);
+                        markerObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5, rootMargin: "0px 0px -50px 0px" });
 
             reveals.forEach(reveal => observer.observe(reveal));
-            
-            // Sofort-Check für Elemente die beim Laden bereits sichtbar sind
+            markers.forEach(marker => markerObserver.observe(marker));
+
             setTimeout(() => {
                 reveals.forEach(reveal => {
-                    if(reveal.getBoundingClientRect().top < window.innerHeight) {
-                        reveal.classList.add('active');
-                    }
+                    if(reveal.getBoundingClientRect().top < window.innerHeight) reveal.classList.add('active');
                 });
             }, 100);
 
-            // --- 4. MACROFEATURE: AMBIENT MOUSE GLOW (Spotlight Effect) ---
+            // --- 4. SPOTLIGHT EFFECT ON CARDS ---
             document.querySelectorAll('.glass-panel').forEach(card => {
                 card.addEventListener('mousemove', e => {
                     const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
+                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
                 });
             });
 
-            // --- 5. DYNAMIC NAVBAR SHRINK ---
+            // --- 5. 3D TILT EFFECT ---
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -4;
+                    const rotateY = ((x - centerX) / centerX) * 4;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                });
+            });
+
+            // --- 6. DYNAMIC NAVBAR SHRINK ---
             const navbar = document.getElementById('navbar');
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
-                    navbar.classList.add('py-1', 'bg-white/70', 'dark:bg-slate-900/70');
-                    navbar.classList.remove('py-2', 'bg-white/40', 'dark:bg-slate-800/30');
+                    navbar.classList.add('py-1', 'shadow-2xl');
+                    navbar.classList.remove('py-2', 'shadow-xl');
                 } else {
-                    navbar.classList.remove('py-1', 'bg-white/70', 'dark:bg-slate-900/70');
-                    navbar.classList.add('py-2', 'bg-white/40', 'dark:bg-slate-800/30');
+                    navbar.classList.remove('py-1', 'shadow-2xl');
+                    navbar.classList.add('py-2', 'shadow-xl');
                 }
             });
         });
